@@ -1,3 +1,13 @@
+---
+layout: post
+title: HashMap的resize方法分析
+subtitle: 
+author: Shiayanga
+categories: [HashMap]
+banner:
+tags: [Java,HashMap]
+sidebar: []
+---
 
 ## 使用场景
 
