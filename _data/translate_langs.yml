@@ -1,6 +1,8 @@
 # Translate languages
 # langs refer to https://cloud.google.com/translate/docs/languages
-
+- lang: zh-CN
+  img: https://cdn.countryflags.com/thumbs/china/flag-400.png
+  text: Chinese(Simple)
 - lang: en
   img: https://cdn.countryflags.com/thumbs/united-states-of-america/flag-400.png
   text: English
