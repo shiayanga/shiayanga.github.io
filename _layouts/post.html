@@ -1,81 +1,39 @@
 ---
-layout: framework
-banner:
-banner_html: post-header.html
-hidden: []
-sidebar:
-  - article-menu
+layout: default
 ---
-
-<div class="post">
-  <section>
-
-    {%- assign name = 'banner' -%}
-    {%- include functions.html func='get_value' -%}
-    {%- assign banner = return -%}
-
-    {%- assign name = 'hidden' -%}
-    {%- include functions.html func='get_value' -%}
-    {%- assign hidden = return -%}
-
-    {%- assign result = hidden | where_exp: "item", "item == 'header'" -%}
-    {%- if banner == nil and result.size == 0 -%}
-    {%- include views/post-header.html -%}
+{%- assign date_format = site.plainwhite.date_format | default: "%b %-d, %Y" -%}
+<div class="post-container">
+  <a class="post-link" href="{{ page.url | relative_url }}">
+    <h2 class="post-title">{{ page.title | escape }}</h2>
+  </a>
+  <div class="post-meta">
+    <div class="post-date"><i class="icon-calendar"></i>{{ page.date | date: date_format }}</div>
+    {%- if page.categories.size > 0 -%}
+    <ul class="post-categories">
+      {%- for tag in page.categories -%}
+      <li>{{ tag }}</li>
+      {%- endfor -%}
+    </ul>
     {%- endif -%}
-
-    {%- include views/article.html -%}
-
-    {%- assign result = hidden | where_exp: "item", "item == 'navigator'" -%}
-    {%- if result.size == 0 -%}
-    <div class="post-nav">
-      {%- if page.previous -%}
-        <a class="previous" href="{{ page.previous.url | relative_url }}" title="{{
-          page.previous.title | escape }}">{{ page.previous.title | escape | truncatewords: 6 }}</a>
-      {%- else -%}
-      <span></span>
-      {%- endif -%}
-
-      {%- if page.next -%}
-        <a class="next" href="{{ page.next.url | relative_url }}" title="{{ page.next.title | escape }}">{{ page.next.title | escape | truncatewords: 6 }}</a>
-      {%- else -%}
-      <span></span>
-      {%- endif -%}
-    </div>
-    {%- endif -%}
-
-    {%- assign result = hidden | where_exp: "item", "item == 'related_posts'" -%}
-    {%- if result.size == 0 -%}
-    <div class="post-related">
-      <div>Related Articles</div>
-      <ul>
-        {% assign posts = site[page.collection] | sample:4 %}
-        {%- for post in posts -%}
-        <li><a class="post-link" href="{{post.url | relative_url}}" title="{{ page.next.title | escape }}">{{ post.title | escape | truncatewords: 12 }}</a></li>
-        {%- endfor -%}
-      </ul>
-    </div>
-    {%- endif -%}
-
-    {%- assign result = hidden | where_exp: "item", "item == 'comments'" -%}
-    {%- if result.size == 0 -%}
-    <div class="post-comments">
-      {%- if page.comments != false -%}
-
-      {%- if site.disqus.shortname -%}
-      {%- include extensions/comments/disqus.html -%}
-      {%- endif -%}
-
-      {%- if site.gitment.username -%}
-      {%- include extensions/comments/gitment.html -%}
-      {%- endif -%}
-
-      {%- if site.utterances.repo -%}
-      {%- include extensions/comments/utterances.html -%}
-      {%- endif -%}
-
-      {%- endif -%}
-    </div>
-    {%- endif -%}
-
-  </section>
+  </div>
+  <div class="post">
+    {{ content }}
+  </div>
+  {%- if site.plainwhite.disqus_shortname -%}
+  <div id="disqus_thread" style="margin-top:25px"></div>
+  <script>
+    var disqus_config = function () {
+      this.page.url = '{{ page.url | absolute_url }}';
+      this.page.identifier = '{{ page.url | absolute_url }}';
+    };
+    (function () {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://{{ site.plainwhite.disqus_shortname }}.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments
+      powered by Disqus.</a></noscript>
+  {%- endif -%}
 </div>
