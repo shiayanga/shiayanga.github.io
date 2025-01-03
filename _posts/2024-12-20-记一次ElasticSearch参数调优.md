@@ -46,6 +46,7 @@ excerpt: ""
 | 3   | li    | 40  |
 | 4   | zhao  | 40  |
 | 5   | wang1 | 20  |
+
 假设以ID聚合，就是5个桶；以name聚合，就是4个桶；以age聚合，就是3个桶。这样就可以直观的理解search.max_buckets最大能有几个桶了。
 
 # 结论
