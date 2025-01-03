@@ -7,7 +7,7 @@ categories: [ElasticSearch]
 banner:
 tags: [ElasticSearch]
 sidebar: []
-show_excerpts: false
+excerpt: ""
 ---
 
 # 问题描述

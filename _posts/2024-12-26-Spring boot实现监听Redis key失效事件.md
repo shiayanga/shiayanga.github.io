@@ -7,6 +7,7 @@ categories: [SpringBoot]
 banner:
 tags: [SpringBoot,Redis]
 sidebar: []
+excerpt: ""
 ---
 
 # 一. 开启Redis key过期提醒
