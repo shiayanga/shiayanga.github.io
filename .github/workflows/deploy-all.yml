@@ -1,0 +1,48 @@
+name: Build and Deploy (Pages + Server)
+
+on:
+  push:
+    branches: [ "main" ]
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # ---------- Build ----------
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.1'
+
+      - name: Install gems
+        run: |
+          gem install bundler
+          bundle install
+
+      - name: Build site
+        run: |
+          bundle exec jekyll build
+
+      # ---------- GitHub Pages ----------
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: _site
+          publish_branch: gh-pages
+
+      # ---------- Personal Server ----------
+      - name: Deploy to Server
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            rsync -avz --delete _site/ /var/www/shiayanga/
