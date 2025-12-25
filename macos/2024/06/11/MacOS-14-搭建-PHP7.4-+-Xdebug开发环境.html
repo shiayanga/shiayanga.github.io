@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<link href="https://fonts.googleapis.com/css?family=Merriweather:300|Raleway:400,700" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/style.css">
+<title>MacOS 14 搭建 PHP7.4 + Xdebug开发环境</title>
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>MacOS 14 搭建 PHP7.4 + Xdebug开发环境 | YoungLee’s Land</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="MacOS 14 搭建 PHP7.4 + Xdebug开发环境" />
+<meta name="author" content="Shiayanga" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:site_name" content="YoungLee’s Land" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-06-11T00:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="MacOS 14 搭建 PHP7.4 + Xdebug开发环境" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Shiayanga"},"dateModified":"2024-06-11T00:00:00+00:00","datePublished":"2024-06-11T00:00:00+00:00","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"MacOS 14 搭建 PHP7.4 + Xdebug开发环境","mainEntityOfPage":{"@type":"WebPage","@id":"/macos/2024/06/11/MacOS-14-%E6%90%AD%E5%BB%BA-PHP7.4-+-Xdebug%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83.html"},"url":"/macos/2024/06/11/MacOS-14-%E6%90%AD%E5%BB%BA-PHP7.4-+-Xdebug%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+<script type="text/javascript" src="/assets/js/darkmode.js"></script>
+
+</head><body>
+  <main class="container">
+    <section class="about">
+      <div class="about-header condensed">
+      <div class="about-title">
+      <a href="/">
+        
+        <img src="/assets/WechatIMG52.jpg" alt="Young Lee" />
+        
+      </a>
+      <h2 id="title">
+        <a href="/">Young Lee</a>
+      </h2>
+      </div><p class="tagline">Developer. Designer</p></div>
+      
+      <ul class="social about-footer condensed"><a href="https://github.com/shiayanga" target="_blank">
+          <li>
+            <i class="icon-github-circled"></i>
+          </li>
+        </a></ul><p class="about-footer condensed">&copy;
+        2020 - 2025</p><div class="about-footer condensed">
+        <p>Dark Mode
+          <i class="icon-moon"></i>
+          <label class="switch">
+            <input type="checkbox" class="dark-mode-toggle">
+            <span class="slider round" onclick="toggleDarkMode()"></span>
+          </label>
+        </p>
+      </div>
+    </section>
+    <section class="content">
+      <div class="post-container">
+  <a class="post-link" href="/macos/2024/06/11/MacOS-14-%E6%90%AD%E5%BB%BA-PHP7.4-+-Xdebug%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83.html">
+    <h2 class="post-title">MacOS 14 搭建 PHP7.4 + Xdebug开发环境</h2>
+  </a>
+  <div class="post-meta">
+    <div class="post-date"><i class="icon-calendar"></i>Jun 11, 2024</div><ul class="post-categories"><li>macOS</li></ul></div>
+  <div class="post">
+    <h1 id="摘要">摘要</h1>
+<p>项目使用的技术栈：PHP 7.4.33、ThinkPHP 5.1.27、Redis、MySQL
+由于MacOS预装的PHP版本较高，所以需要降级
+IDE 使用 PhpStorm 2023.2.3</p>
+
+<h1 id="1-安装php-7433">1. 安装PHP 7.4.33</h1>
+<p>MacOS 14中的brew版本比较高，没有低版本的PHP</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew <span class="nb">install </span>shivammathur/php/php@7.4-debug
+</code></pre></div></div>
+
+<h1 id="2-切换版本">2. 切换版本</h1>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#断开链接php8.3版本</span>
+brew <span class="nb">unlink </span>php@8.3
+<span class="c">#链接php7.4版本</span>
+brew <span class="nb">link </span>php@7.4-debug
+</code></pre></div></div>
+
+<h1 id="3-安装xdebug模块">3. 安装xdebug模块</h1>
+<h2 id="31-确认xdebug版本">3.1 确认xdebug版本</h2>
+<p>将phpinfo()粘贴到xdebug提供的安装向导页面 <a href="https://xdebug.org/wizard">Installation Wizard</a></p>
+
+<p><img src="https://shiayanga-halo.oss-cn-wulanchabu.aliyuncs.com/image-wyfu.png" alt="image-wyfu.png" /></p>
+<h2 id="32-安装xdebug">3.2 安装xdebug</h2>
+<p>根据上一步中分析的结果，安装对应版本的xdebug</p>
+
+<p><img src="https://shiayanga-halo.oss-cn-wulanchabu.aliyuncs.com/image-vbge.png" alt="image-vbge.png" /></p>
+
+<h1 id="4-安装redis模块">4. 安装Redis模块</h1>
+<h2 id="41-下载redis模块的源码包">4.1 下载Redis模块的源码包</h2>
+<p>地址：http://pecl.php.net/package/redis</p>
+<h2 id="42-安装">4.2 安装</h2>
+<p>解压缩后进入目录
+Downloads/redis-5.0.2/redis-5.0.2</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>liyang@liyangdeMBP redis-5.0.2 % ll
+total 3656
+drwxr-xr-x@ 56 liyang  staff    1792  4  3 09:48 ./
+drwxr-xr-x@  5 liyang  staff     160  4  3 09:42 ../
+drwxr-xr-x  14 liyang  staff     448  4  3 09:48 .libs/
+<span class="nt">-rw-r--r--</span>@  1 liyang  staff    3218  7 29  2019 COPYING
+<span class="nt">-rw-r--r--</span>@  1 liyang  staff     204  7 29  2019 CREDITS
+<span class="nt">-rw-r--r--</span>@  1 liyang  staff    3602  7 29  2019 INSTALL.markdown
+<span class="nt">-rw-r--r--</span>   1 liyang  staff   11894  4  3 09:48 Makefile
+<span class="nt">-rw-r--r--</span>   1 liyang  staff       0  4  3 09:48 Makefile.fragments
+<span class="nt">-rw-r--r--</span>   1 liyang  staff    2802  4  3 09:48 Makefile.objects
+<span class="nt">-rw-r--r--</span>@  1 liyang  staff  119355  7 29  2019 README.markdown
+<span class="nt">-rw-r--r--</span>@  1 liyang  staff   10019  7 29  2019 arrays.markdown
+drwxr-xr-x   7 liyang  staff     224  4  3 09:45 autom4te.cache/
+drwxr-xr-x  13 liyang  staff     416  4  3 09:45 build/
+<span class="nt">-rw-r--r--</span>@  1 liyang  staff   10988  7 29  2019 cluster.markdown
+<span class="nt">-rw-r--r--</span>@  1 liyang  staff   83920  7 29  2019 cluster_library.c
+<span class="nt">-rw-r--r--</span>@  1 liyang  staff   18106  7 29  2019 cluster_library.h
+<span class="nt">-rw-r--r--</span>   1 liyang  staff     321  4  3 09:48 cluster_library.lo
+<span class="nt">-rw-r--r--</span>@  1 liyang  staff   19955  7 29  2019 common.h
+<span class="nt">-rw-r--r--</span>   1 liyang  staff    2131  4  3 09:45 config.h
+<span class="nt">-rw-r--r--</span>   1 liyang  staff    2006  4  3 09:48 config.h.in
+<span class="nt">-rw-r--r--</span>   1 liyang  staff   18298  4  3 09:48 config.log
+<span class="nt">-rw-r--r--</span>@  1 liyang  staff    7802  7 29  2019 config.m4
+<span class="nt">-rwxr-xr-x</span>   1 liyang  staff     139  4  3 09:48 config.nice<span class="k">*</span>
+<span class="nt">-rwxr-xr-x</span>   1 liyang  staff   21221  4  3 09:48 config.status<span class="k">*</span>
+<span class="nt">-rw-r--r--</span>@  1 liyang  staff     923  7 29  2019 config.w32
+<span class="nt">-rwxr-xr-x</span>   1 liyang  staff  475668  4  3 09:45 configure<span class="k">*</span>
+<span class="nt">-rw-r--r--</span>   1 liyang  staff    5082  4  3 09:45 configure.ac
+<span class="nt">-rw-r--r--</span>@  1 liyang  staff    4483  7 29  2019 crc16.h
+drwxr-xr-x   2 liyang  staff      64  4  3 09:45 include/
+drwxr-xr-x@  8 liyang  staff     256  4  3 09:42 liblzf/
+<span class="nt">-rw-r--r--</span>@  1 liyang  staff   78234  7 29  2019 library.c
+<span class="nt">-rw-r--r--</span>@  1 liyang  staff    8056  7 29  2019 library.h
+<span class="nt">-rw-r--r--</span>   1 liyang  staff     305  4  3 09:48 library.lo
+<span class="nt">-rwxr-xr-x</span>   1 liyang  staff  211007  4  3 09:48 libtool<span class="k">*</span>
+drwxr-xr-x   3 liyang  staff      96  4  3 09:48 modules/
+<span class="nt">-rw-r--r--</span>@  1 liyang  staff    8509  7 29  2019 php_redis.h
+<span class="nt">-rw-r--r--</span>@  1 liyang  staff  116912  7 29  2019 redis.c
+<span class="nt">-rw-r--r--</span>   1 liyang  staff     802  4  3 09:48 redis.la
+<span class="nt">-rw-r--r--</span>   1 liyang  staff     301  4  3 09:48 redis.lo
+<span class="nt">-rw-r--r--</span>@  1 liyang  staff   40509  7 29  2019 redis_array.c
+<span class="nt">-rw-r--r--</span>@  1 liyang  staff    2281  7 29  2019 redis_array.h
+<span class="nt">-rw-r--r--</span>   1 liyang  staff     313  4  3 09:48 redis_array.lo
+<span class="nt">-rw-r--r--</span>@  1 liyang  staff   40728  7 29  2019 redis_array_impl.c
+<span class="nt">-rw-r--r--</span>@  1 liyang  staff    1350  7 29  2019 redis_array_impl.h
+<span class="nt">-rw-r--r--</span>   1 liyang  staff     323  4  3 09:48 redis_array_impl.lo
+<span class="nt">-rw-r--r--</span>@  1 liyang  staff  106555  7 29  2019 redis_cluster.c
+<span class="nt">-rw-r--r--</span>@  1 liyang  staff   10438  7 29  2019 redis_cluster.h
+<span class="nt">-rw-r--r--</span>   1 liyang  staff     317  4  3 09:48 redis_cluster.lo
+<span class="nt">-rw-r--r--</span>@  1 liyang  staff  130272  7 29  2019 redis_commands.c
+<span class="nt">-rw-r--r--</span>@  1 liyang  staff   13712  7 29  2019 redis_commands.h
+<span class="nt">-rw-r--r--</span>   1 liyang  staff     319  4  3 09:48 redis_commands.lo
+<span class="nt">-rw-r--r--</span>@  1 liyang  staff   35238  7 29  2019 redis_session.c
+<span class="nt">-rw-r--r--</span>@  1 liyang  staff     511  7 29  2019 redis_session.h
+<span class="nt">-rw-r--r--</span>   1 liyang  staff     317  4  3 09:48 redis_session.lo
+<span class="nt">-r-xr-xr-x</span>   1 liyang  staff  127055  4  3 09:45 run-tests.php<span class="k">*</span>
+drwxr-xr-x@ 12 liyang  staff     384  4  3 09:42 tests/
+</code></pre></div></div>
+
+<p><strong>按顺序执行命令</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>liyang@liyangdeMBP redis-5.0.2 % phpize
+liyang@liyangdeMBP redis-5.0.2 % ./configure <span class="nt">--with-php-config</span><span class="o">=</span>/opt/homebrew/Cellar/php@7.4-debug/7.4.33_6/bin/php-config
+liyang@liyangdeMBP redis-5.0.2 % make <span class="o">&amp;&amp;</span> make <span class="nb">install</span>
+</code></pre></div></div>
+
+<h1 id="5-修改phpini配置">5. 修改php.ini配置</h1>
+<p>增加xdebug和Redis扩展</p>
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">zend_extension</span> = <span class="s2">"/opt/homebrew/lib/php/pecl/20190902-debug/xdebug.so"</span>
+<span class="n">xdebug</span>.<span class="n">remote_handler</span>=<span class="s2">"dbgp"</span>
+<span class="n">xdebug</span>.<span class="n">client_host</span>=<span class="n">localhost</span>
+<span class="n">xdebug</span>.<span class="n">client_port</span>=<span class="m">9001</span>
+<span class="n">xdebug</span>.<span class="n">idekey</span>=<span class="n">phpstorm</span>
+<span class="n">xdebug</span>.<span class="n">start_with_request</span>=<span class="n">yes</span>
+<span class="n">xdebug</span>.<span class="n">mode</span>=<span class="n">debug</span>
+
+<span class="n">extension</span>=<span class="s2">"/opt/homebrew/lib/php/pecl/20190902-debug/redis.so"</span>
+</code></pre></div></div>
+
+<h1 id="6-配置phpstorm使可以debug">6. 配置PhpStorm，使可以debug</h1>
+<h2 id="61-配置php解释器">6.1 配置PHP解释器</h2>
+
+<p><img src="https://shiayanga-halo.oss-cn-wulanchabu.aliyuncs.com/image-ezhj.png" alt="image-ezhj.png" /></p>
+
+<h2 id="62-配置xdebug端口">6.2 配置xdebug端口</h2>
+<p>端口应该和php.ini中的一致</p>
+
+<p><img src="https://shiayanga-halo.oss-cn-wulanchabu.aliyuncs.com/image-hnkz.png" alt="image-hnkz.png" /></p>
+
+<h2 id="63-配置dbgp代理">6.3 配置DBGp代理</h2>
+<p>这里的ide键就是php.ini文件中的xdebug.idekey的值</p>
+
+<p><img src="https://shiayanga-halo.oss-cn-wulanchabu.aliyuncs.com/image-whee.png" alt="image-whee.png" /></p>
+
+<h1 id="参考">参考</h1>
+<p><a href="http://pecl.php.net/package/redis">PECL::Package::redis</a></p>
+
+<p><a href="https://blog.csdn.net/xiaochao0323/article/details/119646843">mac 安装php扩展（redis为例）</a></p>
+
+<p><a href="https://blog.csdn.net/weixin_43761212/article/details/134030434">在 macOS 上的多个 PHP 版本之间切换</a></p>
+
+<p><a href="https://xdebug.org/wizard"># Installation Wizard</a></p>
+
+<p><a href="https://www.jianshu.com/p/db74118ce868">手把手完成mac下配置phpstorm的xdebug3</a></p>
+
+  </div></div>
+
+    </section>
+    <footer class="condensed">
+      <ul class="social about-footer condensed"><a href="https://github.com/shiayanga" target="_blank">
+          <li>
+            <i class="icon-github-circled"></i>
+          </li>
+        </a></ul><p class="about-footer condensed">&copy;
+        2020 - 2025</p><div class="about-footer condensed">
+        <p>Dark Mode
+          <i class="icon-moon"></i>
+          <label class="switch">
+            <input type="checkbox" class="dark-mode-toggle">
+            <span class="slider round" onclick="toggleDarkMode()"></span>
+          </label>
+        </p>
+      </div>
+    </footer>
+  </main>
+  
+  <script type="text/javascript" src="/assets/js/darkmode.js"></script>
+  
+</body>
+
+</html>

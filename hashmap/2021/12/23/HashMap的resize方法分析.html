@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<link href="https://fonts.googleapis.com/css?family=Merriweather:300|Raleway:400,700" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/style.css">
+<title>HashMap的resize方法分析</title>
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>HashMap的resize方法分析 | YoungLee’s Land</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="HashMap的resize方法分析" />
+<meta name="author" content="Shiayanga" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:site_name" content="YoungLee’s Land" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-12-23T00:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="HashMap的resize方法分析" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Shiayanga"},"dateModified":"2021-12-23T00:00:00+00:00","datePublished":"2021-12-23T00:00:00+00:00","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"HashMap的resize方法分析","mainEntityOfPage":{"@type":"WebPage","@id":"/hashmap/2021/12/23/HashMap%E7%9A%84resize%E6%96%B9%E6%B3%95%E5%88%86%E6%9E%90.html"},"url":"/hashmap/2021/12/23/HashMap%E7%9A%84resize%E6%96%B9%E6%B3%95%E5%88%86%E6%9E%90.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+<script type="text/javascript" src="/assets/js/darkmode.js"></script>
+
+</head><body>
+  <main class="container">
+    <section class="about">
+      <div class="about-header condensed">
+      <div class="about-title">
+      <a href="/">
+        
+        <img src="/assets/WechatIMG52.jpg" alt="Young Lee" />
+        
+      </a>
+      <h2 id="title">
+        <a href="/">Young Lee</a>
+      </h2>
+      </div><p class="tagline">Developer. Designer</p></div>
+      
+      <ul class="social about-footer condensed"><a href="https://github.com/shiayanga" target="_blank">
+          <li>
+            <i class="icon-github-circled"></i>
+          </li>
+        </a></ul><p class="about-footer condensed">&copy;
+        2020 - 2025</p><div class="about-footer condensed">
+        <p>Dark Mode
+          <i class="icon-moon"></i>
+          <label class="switch">
+            <input type="checkbox" class="dark-mode-toggle">
+            <span class="slider round" onclick="toggleDarkMode()"></span>
+          </label>
+        </p>
+      </div>
+    </section>
+    <section class="content">
+      <div class="post-container">
+  <a class="post-link" href="/hashmap/2021/12/23/HashMap%E7%9A%84resize%E6%96%B9%E6%B3%95%E5%88%86%E6%9E%90.html">
+    <h2 class="post-title">HashMap的resize方法分析</h2>
+  </a>
+  <div class="post-meta">
+    <div class="post-date"><i class="icon-calendar"></i>Dec 23, 2021</div><ul class="post-categories"><li>HashMap</li></ul></div>
+  <div class="post">
+    <h2 id="使用场景">使用场景</h2>
+
+<ul>
+  <li>场景一
+    <ul>
+      <li>HashMap初始化后第一次put键值</li>
+    </ul>
+  </li>
+  <li>场景二
+    <ul>
+      <li>HashMap中的元素数量达到阈值</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="分析">分析</h2>
+
+<ul>
+  <li>
+    <p>场景一：初始化后第一次put</p>
+
+    <ul>
+      <li>
+        <p>未指定容量</p>
+
+        <p>容量为默认的16；加载因子为默认的0.75；阈值为0</p>
+      </li>
+      <li>
+        <p>指定容量为16</p>
+
+        <p>容量为16；加载因子为0.75；阈值为16（由 <code class="language-plaintext highlighter-rouge">tableSizeFor(initialCapacity)</code> 计算所得）</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>场景二</p>
+
+    <ul>
+      <li>元素数量达到阈值，触发扩容机制</li>
+    </ul>
+  </li>
+</ul>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 默认初始容量为 16</span>
+<span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="no">DEFAULT_INITIAL_CAPACITY</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">4</span><span class="o">;</span>
+<span class="c1">// 最大容量 1073741824</span>
+<span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="no">MAXIMUM_CAPACITY</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">30</span><span class="o">;</span>
+<span class="c1">// 默认加载因子 0.75</span>
+<span class="kd">static</span> <span class="kd">final</span> <span class="kt">float</span> <span class="no">DEFAULT_LOAD_FACTOR</span> <span class="o">=</span> <span class="mf">0.75f</span><span class="o">;</span>
+<span class="c1">// 在首次使用时初始化，根据需要调整大小</span>
+<span class="kd">transient</span> <span class="nc">Node</span><span class="o">&lt;</span><span class="no">K</span><span class="o">,</span><span class="no">V</span><span class="o">&gt;[]</span> <span class="n">table</span><span class="o">;</span>
+
+<span class="kd">final</span> <span class="nc">Node</span><span class="o">&lt;</span><span class="no">K</span><span class="o">,</span><span class="no">V</span><span class="o">&gt;[]</span> <span class="nf">resize</span><span class="o">()</span> <span class="o">{</span>
+    <span class="nc">Node</span><span class="o">&lt;</span><span class="no">K</span><span class="o">,</span><span class="no">V</span><span class="o">&gt;[]</span> <span class="n">oldTab</span> <span class="o">=</span> <span class="n">table</span><span class="o">;</span>
+    <span class="c1">// HashMap 初始化完成后，table 为 null</span>
+    <span class="kt">int</span> <span class="n">oldCap</span> <span class="o">=</span> <span class="o">(</span><span class="n">oldTab</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="n">oldTab</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+
+    <span class="kt">int</span> <span class="n">oldThr</span> <span class="o">=</span> <span class="n">threshold</span><span class="o">;</span>
+    <span class="kt">int</span> <span class="n">newCap</span><span class="o">,</span> <span class="n">newThr</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">oldCap</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>	
+        <span class="c1">// 场景二：扩容</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">oldCap</span> <span class="o">&gt;=</span> <span class="no">MAXIMUM_CAPACITY</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">// 当容量达到最大容量，将阈值置为Integer的最大值，并返回原有的节点</span>
+            <span class="n">threshold</span> <span class="o">=</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">MAX_VALUE</span><span class="o">;</span>
+            <span class="k">return</span> <span class="n">oldTab</span><span class="o">;</span>
+        <span class="o">}</span><span class="k">else</span> <span class="k">if</span> <span class="o">((</span><span class="n">newCap</span> <span class="o">=</span> <span class="n">oldCap</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="o">)</span> <span class="o">&lt;</span> <span class="no">MAXIMUM_CAPACITY</span> <span class="o">&amp;&amp;</span> <span class="n">oldCap</span> <span class="o">&gt;=</span> <span class="no">DEFAULT_INITIAL_CAPACITY</span><span class="o">){</span>
+            <span class="c1">// 扩容后依然未达到最大值，且原有容量大于等于默认初始容量时，将阈值置为当前阈值的两倍</span>
+            <span class="n">newThr</span> <span class="o">=</span> <span class="n">oldThr</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="o">}</span>           
+    <span class="o">}</span><span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">oldThr</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">){</span>
+      <span class="c1">// 场景一：初始化HashMap</span>
+      <span class="n">newCap</span> <span class="o">=</span> <span class="n">oldThr</span><span class="o">;</span>  
+    <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+        <span class="c1">// 场景一：初始化HashMap</span>
+        <span class="n">newCap</span> <span class="o">=</span> <span class="no">DEFAULT_INITIAL_CAPACITY</span><span class="o">;</span>
+        <span class="n">newThr</span> <span class="o">=</span> <span class="o">(</span><span class="kt">int</span><span class="o">)(</span><span class="no">DEFAULT_LOAD_FACTOR</span> <span class="o">*</span> <span class="no">DEFAULT_INITIAL_CAPACITY</span><span class="o">);</span>
+    <span class="o">}</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">newThr</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// 如果阈值依然为0，设置新的阈值</span>
+        <span class="kt">float</span> <span class="n">ft</span> <span class="o">=</span> <span class="o">(</span><span class="kt">float</span><span class="o">)</span><span class="n">newCap</span> <span class="o">*</span> <span class="n">loadFactor</span><span class="o">;</span>
+        <span class="n">newThr</span> <span class="o">=</span> <span class="o">(</span><span class="n">newCap</span> <span class="o">&lt;</span> <span class="no">MAXIMUM_CAPACITY</span> <span class="o">&amp;&amp;</span> <span class="n">ft</span> <span class="o">&lt;</span> <span class="o">(</span><span class="kt">float</span><span class="o">)</span><span class="no">MAXIMUM_CAPACITY</span> <span class="o">?</span> <span class="o">(</span><span class="kt">int</span><span class="o">)</span><span class="n">ft</span> <span class="o">:</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">MAX_VALUE</span><span class="o">);</span>
+    <span class="o">}</span>
+    
+    <span class="n">threshold</span> <span class="o">=</span> <span class="n">newThr</span><span class="o">;</span>
+    <span class="nd">@SuppressWarnings</span><span class="o">({</span><span class="s">"rawtypes"</span><span class="o">,</span><span class="s">"unchecked"</span><span class="o">})</span>
+    <span class="nc">Node</span><span class="o">&lt;</span><span class="no">K</span><span class="o">,</span><span class="no">V</span><span class="o">&gt;[]</span> <span class="n">newTab</span> <span class="o">=</span> <span class="o">(</span><span class="nc">Node</span><span class="o">&lt;</span><span class="no">K</span><span class="o">,</span><span class="no">V</span><span class="o">&gt;[])</span><span class="k">new</span> <span class="nc">Node</span><span class="o">[</span><span class="n">newCap</span><span class="o">];</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">newTab</span><span class="o">;</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">oldTab</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">oldCap</span><span class="o">;</span> <span class="o">++</span><span class="n">j</span><span class="o">)</span> <span class="o">{</span>
+            <span class="nc">Node</span><span class="o">&lt;</span><span class="no">K</span><span class="o">,</span><span class="no">V</span><span class="o">&gt;</span> <span class="n">e</span><span class="o">;</span>
+            <span class="k">if</span> <span class="o">((</span><span class="n">e</span> <span class="o">=</span> <span class="n">oldTab</span><span class="o">[</span><span class="n">j</span><span class="o">])</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">oldTab</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="na">next</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span>
+                    <span class="n">newTab</span><span class="o">[</span><span class="n">e</span><span class="o">.</span><span class="na">hash</span> <span class="o">&amp;</span> <span class="o">(</span><span class="n">newCap</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)]</span> <span class="o">=</span> <span class="n">e</span><span class="o">;</span>
+                <span class="k">else</span> <span class="nf">if</span> <span class="o">(</span><span class="n">e</span> <span class="k">instanceof</span> <span class="nc">TreeNode</span><span class="o">)</span>
+                    <span class="o">((</span><span class="nc">TreeNode</span><span class="o">&lt;</span><span class="no">K</span><span class="o">,</span><span class="no">V</span><span class="o">&gt;)</span><span class="n">e</span><span class="o">).</span><span class="na">split</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="n">newTab</span><span class="o">,</span> <span class="n">j</span><span class="o">,</span> <span class="n">oldCap</span><span class="o">);</span>
+                <span class="k">else</span> <span class="o">{</span>
+                    <span class="nc">Node</span><span class="o">&lt;</span><span class="no">K</span><span class="o">,</span><span class="no">V</span><span class="o">&gt;</span> <span class="n">loHead</span> <span class="o">=</span> <span class="kc">null</span><span class="o">,</span> <span class="n">loTail</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+                    <span class="nc">Node</span><span class="o">&lt;</span><span class="no">K</span><span class="o">,</span><span class="no">V</span><span class="o">&gt;</span> <span class="n">hiHead</span> <span class="o">=</span> <span class="kc">null</span><span class="o">,</span> <span class="n">hiTail</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+                    <span class="nc">Node</span><span class="o">&lt;</span><span class="no">K</span><span class="o">,</span><span class="no">V</span><span class="o">&gt;</span> <span class="n">next</span><span class="o">;</span>
+                    <span class="k">do</span> <span class="o">{</span>
+                        <span class="n">next</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+                        <span class="k">if</span> <span class="o">((</span><span class="n">e</span><span class="o">.</span><span class="na">hash</span> <span class="o">&amp;</span> <span class="n">oldCap</span><span class="o">)</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+                            <span class="k">if</span> <span class="o">(</span><span class="n">loTail</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span>
+                                <span class="n">loHead</span> <span class="o">=</span> <span class="n">e</span><span class="o">;</span>
+                            <span class="k">else</span>
+                                <span class="n">loTail</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">e</span><span class="o">;</span>
+                            <span class="n">loTail</span> <span class="o">=</span> <span class="n">e</span><span class="o">;</span>
+                        <span class="o">}</span>
+                        <span class="k">else</span> <span class="o">{</span>
+                            <span class="k">if</span> <span class="o">(</span><span class="n">hiTail</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span>
+                                <span class="n">hiHead</span> <span class="o">=</span> <span class="n">e</span><span class="o">;</span>
+                            <span class="k">else</span>
+                                <span class="n">hiTail</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">e</span><span class="o">;</span>
+                            <span class="n">hiTail</span> <span class="o">=</span> <span class="n">e</span><span class="o">;</span>
+                        <span class="o">}</span>
+                    <span class="o">}</span> <span class="k">while</span> <span class="o">((</span><span class="n">e</span> <span class="o">=</span> <span class="n">next</span><span class="o">)</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">);</span>
+                    <span class="k">if</span> <span class="o">(</span><span class="n">loTail</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                        <span class="n">loTail</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+                        <span class="n">newTab</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="n">loHead</span><span class="o">;</span>
+                    <span class="o">}</span>
+                    <span class="k">if</span> <span class="o">(</span><span class="n">hiTail</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                        <span class="n">hiTail</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+                        <span class="n">newTab</span><span class="o">[</span><span class="n">j</span> <span class="o">+</span> <span class="n">oldCap</span><span class="o">]</span> <span class="o">=</span> <span class="n">hiHead</span><span class="o">;</span>
+                    <span class="o">}</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="k">return</span> <span class="n">newTab</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+
+  </div></div>
+
+    </section>
+    <footer class="condensed">
+      <ul class="social about-footer condensed"><a href="https://github.com/shiayanga" target="_blank">
+          <li>
+            <i class="icon-github-circled"></i>
+          </li>
+        </a></ul><p class="about-footer condensed">&copy;
+        2020 - 2025</p><div class="about-footer condensed">
+        <p>Dark Mode
+          <i class="icon-moon"></i>
+          <label class="switch">
+            <input type="checkbox" class="dark-mode-toggle">
+            <span class="slider round" onclick="toggleDarkMode()"></span>
+          </label>
+        </p>
+      </div>
+    </footer>
+  </main>
+  
+  <script type="text/javascript" src="/assets/js/darkmode.js"></script>
+  
+</body>
+
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<link href="https://fonts.googleapis.com/css?family=Merriweather:300|Raleway:400,700" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/style.css">
+<title>GIS坐标系转换(EPSG:4326与EPSG:3857相互转换)</title>
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>GIS坐标系转换(EPSG:4326与EPSG:3857相互转换) | YoungLee’s Land</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="GIS坐标系转换(EPSG:4326与EPSG:3857相互转换)" />
+<meta name="author" content="Shiayanga" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:site_name" content="YoungLee’s Land" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-12-24T00:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="GIS坐标系转换(EPSG:4326与EPSG:3857相互转换)" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Shiayanga"},"dateModified":"2020-12-24T00:00:00+00:00","datePublished":"2020-12-24T00:00:00+00:00","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"GIS坐标系转换(EPSG:4326与EPSG:3857相互转换)","mainEntityOfPage":{"@type":"WebPage","@id":"/gis/2020/12/24/GIS%E5%9D%90%E6%A0%87%E7%B3%BB%E8%BD%AC%E6%8D%A2(EPSG-4326%E4%B8%8EEPSG-3857%E7%9B%B8%E4%BA%92%E8%BD%AC%E6%8D%A2).html"},"url":"/gis/2020/12/24/GIS%E5%9D%90%E6%A0%87%E7%B3%BB%E8%BD%AC%E6%8D%A2(EPSG-4326%E4%B8%8EEPSG-3857%E7%9B%B8%E4%BA%92%E8%BD%AC%E6%8D%A2).html"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+<script type="text/javascript" src="/assets/js/darkmode.js"></script>
+
+</head><body>
+  <main class="container">
+    <section class="about">
+      <div class="about-header condensed">
+      <div class="about-title">
+      <a href="/">
+        
+        <img src="/assets/WechatIMG52.jpg" alt="Young Lee" />
+        
+      </a>
+      <h2 id="title">
+        <a href="/">Young Lee</a>
+      </h2>
+      </div><p class="tagline">Developer. Designer</p></div>
+      
+      <ul class="social about-footer condensed"><a href="https://github.com/shiayanga" target="_blank">
+          <li>
+            <i class="icon-github-circled"></i>
+          </li>
+        </a></ul><p class="about-footer condensed">&copy;
+        2020 - 2025</p><div class="about-footer condensed">
+        <p>Dark Mode
+          <i class="icon-moon"></i>
+          <label class="switch">
+            <input type="checkbox" class="dark-mode-toggle">
+            <span class="slider round" onclick="toggleDarkMode()"></span>
+          </label>
+        </p>
+      </div>
+    </section>
+    <section class="content">
+      <div class="post-container">
+  <a class="post-link" href="/gis/2020/12/24/GIS%E5%9D%90%E6%A0%87%E7%B3%BB%E8%BD%AC%E6%8D%A2(EPSG-4326%E4%B8%8EEPSG-3857%E7%9B%B8%E4%BA%92%E8%BD%AC%E6%8D%A2).html">
+    <h2 class="post-title">GIS坐标系转换(EPSG:4326与EPSG:3857相互转换)</h2>
+  </a>
+  <div class="post-meta">
+    <div class="post-date"><i class="icon-calendar"></i>Dec 24, 2020</div><ul class="post-categories"><li>GIS</li></ul></div>
+  <div class="post">
+    <ol>
+  <li>EPSG:4326（WGS84）
+~~~ text
+WGS84 是目前最流行的地理坐标系统。在国际上，每个坐标系统都会被分配一个 EPSG 代码，EPSG:4326 就是 WGS84 的代码。</li>
+</ol>
+
+<p>GPS是基于WGS84的，所以通常我们得到的坐标数据都是WGS84的。一般我们在存储数据时，仍然按WGS84存储。</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+2. EPSG:3857（WGS84 Web Mercator）
+~~~text
+伪墨卡托投影，也被称为球体墨卡托，Web Mercator。它是基于墨卡托投影的，把 WGS84坐标系投影到正方形。
+
+我们前面已经知道 WGS84 是基于椭球体的，但是伪墨卡托投影把坐标投影到球体上，这导致两极的失真变大，但是却更容易计算。这也许是为什么被称为”伪“墨卡托吧。
+另外，伪墨卡托投影还切掉了南北85.051129°纬度以上的地区，以保证整个投影是正方形的。
+
+因为墨卡托投影等正形性的特点，在不同层级的图层上物体的形状保持不变，一个正方形可以不断被划分为更多更小的正方形以显示更清晰的细节。
+很明显，伪墨卡托坐标系是非常显示数据，但是不适合存储数据的，通常我们使用WGS84 存储数据，使用伪墨卡托显示数据。
+
+Web Mercator 最早是由 Google 提出的，当前已经成为 Web Map 的事实标准。但是也许是由于上面”伪“的原因，最初 Web Mercator 被拒绝分配EPSG 代码。于是大家普遍使用 EPSG:900913（Google的数字变形） 的非官方代码来代表它。
+直到2008年，才被分配了EPSG:3785的代码，但在同一年没多久，又被弃用，重新分配了 EPSG:3857 的正式代码，使用至今。
+</code></pre></div></div>
+
+<ol>
+  <li>EPSG:3857转换经纬度(EPSG:4326)
+    <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// javascript 转换</span>
+<span class="kd">function</span> <span class="nf">mercatorTolonlat</span><span class="p">(</span><span class="nx">mercator</span><span class="p">){</span>
+ <span class="kd">var</span> <span class="nx">lonlat</span><span class="o">=</span><span class="p">{</span>
+ 	<span class="na">x</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span>
+ 	<span class="na">y</span><span class="p">:</span><span class="mi">0</span>
+ <span class="p">};</span>
+ <span class="kd">var</span> <span class="nx">x</span> <span class="o">=</span> <span class="nx">mercator</span><span class="p">.</span><span class="nx">x</span><span class="o">/</span><span class="mf">20037508.34</span><span class="o">*</span><span class="mi">180</span><span class="p">;</span>
+ <span class="kd">var</span> <span class="nx">y</span> <span class="o">=</span> <span class="nx">mercator</span><span class="p">.</span><span class="nx">y</span><span class="o">/</span><span class="mf">20037508.34</span><span class="o">*</span><span class="mi">180</span><span class="p">;</span>
+ <span class="nx">y</span><span class="o">=</span> <span class="mi">180</span><span class="o">/</span><span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span><span class="o">*</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="nb">Math</span><span class="p">.</span><span class="nf">atan</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nf">exp</span><span class="p">(</span><span class="nx">y</span><span class="o">*</span><span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span><span class="o">/</span><span class="mi">180</span><span class="p">))</span><span class="o">-</span><span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span><span class="o">/</span><span class="mi">2</span><span class="p">);</span>
+ <span class="nx">lonlat</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+ <span class="nx">lonlat</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="nx">y</span><span class="p">;</span>
+ <span class="k">return</span> <span class="nx">lonlat</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>    </div>
+  </li>
+  <li>经纬度(EPSG:4326)转换EPSG:3857
+    <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// javascript 转换</span>
+<span class="kd">function</span> <span class="nf">lonLat2Mercator</span><span class="p">(</span><span class="nx">lonlat</span><span class="p">){</span>
+ <span class="kd">var</span> <span class="nx">mercator</span> <span class="o">=</span> <span class="p">{</span>
+     <span class="na">x</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span>
+ 	<span class="na">y</span><span class="p">:</span><span class="mi">0</span>
+ <span class="p">};</span>
+ <span class="kd">var</span> <span class="nx">earthRad</span> <span class="o">=</span> <span class="mf">6378137.0</span><span class="p">;</span>
+ <span class="nx">mercator</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="nx">lonlat</span><span class="p">.</span><span class="nx">lng</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span> <span class="o">/</span> <span class="mi">180</span> <span class="o">*</span> <span class="nx">earthRad</span><span class="p">;</span>
+ <span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="nx">lonlat</span><span class="p">.</span><span class="nx">lat</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span> <span class="o">/</span> <span class="mi">180</span><span class="p">;</span>
+ <span class="nx">mercator</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="nx">earthRad</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nf">log</span><span class="p">((</span><span class="mf">1.0</span> <span class="o">+</span> <span class="nb">Math</span><span class="p">.</span><span class="nf">sin</span><span class="p">(</span><span class="nx">a</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="nb">Math</span><span class="p">.</span><span class="nf">sin</span><span class="p">(</span><span class="nx">a</span><span class="p">)));</span>
+ <span class="k">return</span> <span class="nx">mercator</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+
+  </div></div>
+
+    </section>
+    <footer class="condensed">
+      <ul class="social about-footer condensed"><a href="https://github.com/shiayanga" target="_blank">
+          <li>
+            <i class="icon-github-circled"></i>
+          </li>
+        </a></ul><p class="about-footer condensed">&copy;
+        2020 - 2025</p><div class="about-footer condensed">
+        <p>Dark Mode
+          <i class="icon-moon"></i>
+          <label class="switch">
+            <input type="checkbox" class="dark-mode-toggle">
+            <span class="slider round" onclick="toggleDarkMode()"></span>
+          </label>
+        </p>
+      </div>
+    </footer>
+  </main>
+  
+  <script type="text/javascript" src="/assets/js/darkmode.js"></script>
+  
+</body>
+
+</html>

@@ -1,0 +1,99 @@
+[
+  
+    {
+      "title"    : "记一次ElasticSearch参数调优",
+      "title-lower"    : "记一次elasticsearch参数调优",
+      "sub-titile" : "",
+      "sub-titile-lower" : "",
+      "categories" : "ElasticSearch",
+      "tags"     : "ElasticSearch",
+      "url"      : "/elasticsearch/2024/12/20/%E8%AE%B0%E4%B8%80%E6%AC%A1ElasticSearch%E5%8F%82%E6%95%B0%E8%B0%83%E4%BC%98.html",
+      "date"     : "2024-12-20 00:00:00 +0000",
+      "content"     : "问题描述生产环境中的ES在查询大数据量时一直报错{	&quot;error&quot;: {		&quot;root_cause&quot;: [],		&quot;type&quot;: &quot;search_phase_execution_exception&quot;,		&quot;reason&quot;: &quot;&quot;,		&quot;phase&quot;: &..."
+    } ,
+  
+    {
+      "title"    : "常见磁盘阵列容量计算公式",
+      "title-lower"    : "常见磁盘阵列容量计算公式",
+      "sub-titile" : "",
+      "sub-titile-lower" : "",
+      "categories" : "RAID",
+      "tags"     : "RAID",
+      "url"      : "/raid/2024/07/23/%E5%B8%B8%E8%A7%81%E7%A3%81%E7%9B%98%E9%98%B5%E5%88%97%E5%AE%B9%E9%87%8F%E8%AE%A1%E7%AE%97%E5%85%AC%E5%BC%8F.html",
+      "date"     : "2024-07-23 00:00:00 +0000",
+      "content"     : "  假定磁盘数量为M，单个磁盘容量为NRAID0  描述：数据条带化，无冗余。  容量公式： 总容量=单个磁盘容量×磁盘数量=MN  示例：5块2TB的硬盘，容量 = 2TB×5=10TB    RAID1    描述：数据镜像，至少2块磁盘。  容量公式： 总容量=单个磁盘容量=M  示例：2块2TB的硬盘，容量 = 2TB    RAID5    描述：分布式奇偶校验，至少3块磁盘。  ..."
+    } ,
+  
+    {
+      "title"    : "MacOS 14 搭建 PHP7.4 + Xdebug开发环境",
+      "title-lower"    : "macos 14 搭建 php7.4 + xdebug开发环境",
+      "sub-titile" : "",
+      "sub-titile-lower" : "",
+      "categories" : "macOS",
+      "tags"     : "macOS, PHP",
+      "url"      : "/macos/2024/06/11/MacOS-14-%E6%90%AD%E5%BB%BA-PHP7.4-+-Xdebug%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83.html",
+      "date"     : "2024-06-11 00:00:00 +0000",
+      "content"     : "摘要项目使用的技术栈：PHP 7.4.33、ThinkPHP 5.1.27、Redis、MySQL由于MacOS预装的PHP版本较高，所以需要降级IDE 使用 PhpStorm 2023.2.31. 安装PHP 7.4.33MacOS 14中的brew版本比较高，没有低版本的PHPbrew install shivammathur/php/php@7.4-debug2. 切换版本#断开链接p..."
+    } ,
+  
+    {
+      "title"    : "SpringBoot实现监听Redis key失效事件",
+      "title-lower"    : "springboot实现监听redis key失效事件",
+      "sub-titile" : "",
+      "sub-titile-lower" : "",
+      "categories" : "SpringBoot",
+      "tags"     : "SpringBoot, Redis",
+      "url"      : "/springboot/2023/12/26/Spring-boot%E5%AE%9E%E7%8E%B0%E7%9B%91%E5%90%ACRedis-key%E5%A4%B1%E6%95%88%E4%BA%8B%E4%BB%B6.html",
+      "date"     : "2023-12-26 00:00:00 +0000",
+      "content"     : "一. 开启Redis key过期提醒      方式一：修改配置文件    redis.conf      # 默认 notify-keyspace-events &quot;&quot;  notify-keyspace-events Ex            方式二：命令行开启      CONFIG SET notify-keyspace-events Ex  CONFIG GET ..."
+    } ,
+  
+    {
+      "title"    : "一致性Hash问题及解决方案",
+      "title-lower"    : "一致性hash问题及解决方案",
+      "sub-titile" : "",
+      "sub-titile-lower" : "",
+      "categories" : "算法",
+      "tags"     : "算法",
+      "url"      : "/%E7%AE%97%E6%B3%95/2023/12/10/%E4%B8%80%E8%87%B4%E6%80%A7Hash%E9%97%AE%E9%A2%98%E5%8F%8A%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88.html",
+      "date"     : "2023-12-10 00:00:00 +0000",
+      "content"     : "  分布式：把一个系统拆分为多个子系统，每个子系统负责格子的那部分功能，独立部署，各司其职  集群：多个实例共同工作，最简单常见的集群是把一个应用复制多份部署分布式一定是集群，但是集群不一定是分布式Hash算法，在安全加密领域MD5、SHA等加密算法，在数据存储和查找方面有Hash表，以上都用到了Hash算法为什么需要使用Hash？Hash算法较多的应用在素具存储和查找领域，最经典的就是Ha..."
+    } ,
+  
+    {
+      "title"    : "HashMap的resize方法分析",
+      "title-lower"    : "hashmap的resize方法分析",
+      "sub-titile" : "",
+      "sub-titile-lower" : "",
+      "categories" : "HashMap",
+      "tags"     : "Java, HashMap",
+      "url"      : "/hashmap/2021/12/23/HashMap%E7%9A%84resize%E6%96%B9%E6%B3%95%E5%88%86%E6%9E%90.html",
+      "date"     : "2021-12-23 00:00:00 +0000",
+      "content"     : "使用场景  场景一          HashMap初始化后第一次put键值        场景二          HashMap中的元素数量达到阈值      分析      场景一：初始化后第一次put                  未指定容量        容量为默认的16；加载因子为默认的0.75；阈值为0                    指定容量为16        容..."
+    } ,
+  
+    {
+      "title"    : "GIS坐标系转换(EPSG:4326与EPSG:3857相互转换)",
+      "title-lower"    : "gis坐标系转换(epsg:4326与epsg:3857相互转换)",
+      "sub-titile" : "",
+      "sub-titile-lower" : "",
+      "categories" : "GIS",
+      "tags"     : "GIS, 坐标转换",
+      "url"      : "/gis/2020/12/24/GIS%E5%9D%90%E6%A0%87%E7%B3%BB%E8%BD%AC%E6%8D%A2(EPSG-4326%E4%B8%8EEPSG-3857%E7%9B%B8%E4%BA%92%E8%BD%AC%E6%8D%A2).html",
+      "date"     : "2020-12-24 00:00:00 +0000",
+      "content"     : "  EPSG:4326（WGS84）~~~ textWGS84 是目前最流行的地理坐标系统。在国际上，每个坐标系统都会被分配一个 EPSG 代码，EPSG:4326 就是 WGS84 的代码。GPS是基于WGS84的，所以通常我们得到的坐标数据都是WGS84的。一般我们在存储数据时，仍然按WGS84存储。2. EPSG:3857（WGS84 Web Mercator）~~~text伪墨卡托投..."
+    } ,
+  
+    {
+      "title"    : "Mapbox、GeoServer离线部署矢量地图",
+      "title-lower"    : "mapbox、geoserver离线部署矢量地图",
+      "sub-titile" : "",
+      "sub-titile-lower" : "",
+      "categories" : "GIS",
+      "tags"     : "GIS, GeoServer",
+      "url"      : "/gis/2020/08/18/Mapbox-GeoServer%E7%A6%BB%E7%BA%BF%E9%83%A8%E7%BD%B2%E7%9F%A2%E9%87%8F%E5%9C%B0%E5%9B%BE.html",
+      "date"     : "2020-08-18 00:00:00 +0000",
+      "content"     : "关键词：Mapbox、GeoServer、Tomcat、PostgreSQL、PostGis一、地图数据获取使用OpenStreetMap获取中国的矢量地图数据二、安装GeoServer及Vector Tiles扩展将下载好的GeoServer.war放入Tomcat，启动Tomcat后将Vector Tiles扩展中的四个jar包放入GeoServer的lib目录并重启Tomcat。三、安..."
+    } 
+  
+]

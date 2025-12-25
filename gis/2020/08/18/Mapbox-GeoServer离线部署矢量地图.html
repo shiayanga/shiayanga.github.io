@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<link href="https://fonts.googleapis.com/css?family=Merriweather:300|Raleway:400,700" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/style.css">
+<title>Mapbox、GeoServer离线部署矢量地图</title>
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Mapbox、GeoServer离线部署矢量地图 | YoungLee’s Land</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="Mapbox、GeoServer离线部署矢量地图" />
+<meta name="author" content="Shiayanga" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:site_name" content="YoungLee’s Land" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-08-18T00:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Mapbox、GeoServer离线部署矢量地图" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Shiayanga"},"dateModified":"2020-08-18T00:00:00+00:00","datePublished":"2020-08-18T00:00:00+00:00","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Mapbox、GeoServer离线部署矢量地图","mainEntityOfPage":{"@type":"WebPage","@id":"/gis/2020/08/18/Mapbox-GeoServer%E7%A6%BB%E7%BA%BF%E9%83%A8%E7%BD%B2%E7%9F%A2%E9%87%8F%E5%9C%B0%E5%9B%BE.html"},"url":"/gis/2020/08/18/Mapbox-GeoServer%E7%A6%BB%E7%BA%BF%E9%83%A8%E7%BD%B2%E7%9F%A2%E9%87%8F%E5%9C%B0%E5%9B%BE.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+<script type="text/javascript" src="/assets/js/darkmode.js"></script>
+
+</head><body>
+  <main class="container">
+    <section class="about">
+      <div class="about-header condensed">
+      <div class="about-title">
+      <a href="/">
+        
+        <img src="/assets/WechatIMG52.jpg" alt="Young Lee" />
+        
+      </a>
+      <h2 id="title">
+        <a href="/">Young Lee</a>
+      </h2>
+      </div><p class="tagline">Developer. Designer</p></div>
+      
+      <ul class="social about-footer condensed"><a href="https://github.com/shiayanga" target="_blank">
+          <li>
+            <i class="icon-github-circled"></i>
+          </li>
+        </a></ul><p class="about-footer condensed">&copy;
+        2020 - 2025</p><div class="about-footer condensed">
+        <p>Dark Mode
+          <i class="icon-moon"></i>
+          <label class="switch">
+            <input type="checkbox" class="dark-mode-toggle">
+            <span class="slider round" onclick="toggleDarkMode()"></span>
+          </label>
+        </p>
+      </div>
+    </section>
+    <section class="content">
+      <div class="post-container">
+  <a class="post-link" href="/gis/2020/08/18/Mapbox-GeoServer%E7%A6%BB%E7%BA%BF%E9%83%A8%E7%BD%B2%E7%9F%A2%E9%87%8F%E5%9C%B0%E5%9B%BE.html">
+    <h2 class="post-title">Mapbox、GeoServer离线部署矢量地图</h2>
+  </a>
+  <div class="post-meta">
+    <div class="post-date"><i class="icon-calendar"></i>Aug 18, 2020</div><ul class="post-categories"><li>GIS</li></ul></div>
+  <div class="post">
+    <p>关键词：Mapbox、GeoServer、Tomcat、PostgreSQL、PostGis</p>
+<h2 id="一地图数据获取">一、地图数据获取</h2>
+
+<p>使用OpenStreetMap获取中国的矢量地图数据
+<img src="../assets/images/img_2.png" alt="img_2.png" />
+<img src="../assets/images/img_1.png" alt="img_1.png" /></p>
+<h2 id="二安装geoserver及vector-tiles扩展">二、安装GeoServer及Vector Tiles扩展</h2>
+<p><img src="../assets/images/img_3.png" alt="img_3.png" />
+<img src="../assets/images/img_4.png" alt="img_4.png" />
+<strong>将下载好的GeoServer.war放入Tomcat，启动Tomcat后将Vector Tiles扩展中的四个jar包放入GeoServer的lib目录并重启Tomcat。</strong></p>
+
+<h2 id="三安装postgresql及postgis扩展">三、安装PostgreSQL及PostGis扩展</h2>
+<p>略</p>
+<h2 id="四将shp文件导入postgresql">四、将shp文件导入PostgreSQL</h2>
+<p><img src="../assets/images/img_5.png" alt="img_5.png" />
+<strong>SRID那一列选择4326</strong></p>
+
+<h2 id="五创建工作区数据存储">五、创建工作区、数据存储</h2>
+<p>打开GeoServer的web页面，默认用户名admin，密码geoserver
+<img src="../assets/images/img_6.png" alt="img_6.png" />
+<img src="../assets/images/img_7.png" alt="img_7.png" />
+<img src="../assets/images/img_8.png" alt="img_8.png" /></p>
+
+<h2 id="六发布图层创建图层组">六、发布图层、创建图层组</h2>
+<ol>
+  <li>发布图层
+<img src="../assets/images/img_9.png" alt="img_9.png" /></li>
+  <li>发布图层时，“定义SRS”位置选择“EPSG:4326”
+<img src="../assets/images/img_10.png" alt="img_10.png" />
+<img src="../assets/images/img_11.png" alt="img_11.png" /></li>
+  <li>创建图层组
+<img src="../assets/images/img_12.png" alt="img_12.png" />
+添加图层并生成边界
+<img src="../assets/images/img_13.png" alt="img_13.png" />
+添加完所需图层后生成边界
+<img src="../assets/images/img_14.png" alt="img_14.png" /></li>
+</ol>
+
+<h2 id="七设置矢量切片格式">七、设置矢量切片格式</h2>
+<p>勾选application/x-protobuf;type=mapbox-vector矢量切片格式，切片为.dbf格式的文件，压缩率更好。适合网络传输。选择默认切片格式EPSG:900913，因为Mapbox只支持WGS84 Web 墨卡托投影投影
+<img src="../assets/images/img_15.png" alt="img_15.png" />
+若此处无“application/x-protobuf;type=mapbox-vector“选项，请先添加Vector Tiles扩展。</p>
+<h2 id="八离线部署mapbox所需的字体图标等">八、离线部署Mapbox所需的字体、图标等</h2>
+<p><a href="https://www.cnblogs.com/ATtuing/p/9217029.html">离线部署Mapbox之.pbf字体库</a></p>
+
+<p><a href="https://www.cnblogs.com/ATtuing/p/9273391.html">离线部署Mapbox之sprite大图图标文件生成</a></p>
+
+<h2 id="九mapbox获取地图">九、Mapbox获取地图</h2>
+<ol>
+  <li>点击左上角GeoServer图标回到首页，点击右侧tms
+<img src="../assets/images/img_16.png" alt="img_16.png" /></li>
+  <li>复制tms服务路径
+<img src="../assets/images/img_17.png" alt="img_17.png" /></li>
+  <li>Mapbox自定义样式中填入tms地址，定义好样式就可以了
+<img src="../assets/images/img_18.png" alt="img_18.png" /></li>
+</ol>
+
+<p>参考：<a href="https://www.cnblogs.com/ATtuing/">ATtuing的博客</a></p>
+
+  </div></div>
+
+    </section>
+    <footer class="condensed">
+      <ul class="social about-footer condensed"><a href="https://github.com/shiayanga" target="_blank">
+          <li>
+            <i class="icon-github-circled"></i>
+          </li>
+        </a></ul><p class="about-footer condensed">&copy;
+        2020 - 2025</p><div class="about-footer condensed">
+        <p>Dark Mode
+          <i class="icon-moon"></i>
+          <label class="switch">
+            <input type="checkbox" class="dark-mode-toggle">
+            <span class="slider round" onclick="toggleDarkMode()"></span>
+          </label>
+        </p>
+      </div>
+    </footer>
+  </main>
+  
+  <script type="text/javascript" src="/assets/js/darkmode.js"></script>
+  
+</body>
+
+</html>
