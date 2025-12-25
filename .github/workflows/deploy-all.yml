@@ -14,6 +14,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
+    # ⭐ 关键：GitHub Pages v4 必须有这个
+    environment:
+      name: github-pages
+
     steps:
       # 1. 拉取代码
       - name: Checkout repository
@@ -34,11 +38,7 @@ jobs:
       - name: Build site
         run: bundle exec jekyll build
 
-      # （可选，调试用，确认 _site 存在）
-      # - name: Debug workspace
-      #   run: ls -la
-
-      # 5. 上传构建产物给 GitHub Pages
+      # 5. 上传 GitHub Pages 构建产物
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
