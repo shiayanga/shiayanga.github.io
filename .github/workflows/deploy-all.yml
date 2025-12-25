@@ -54,7 +54,7 @@ jobs:
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets._SSH_KEY }}
+          key: ${{ secrets.SSH_KEY }}
           source: "_site/*"
           target: "/var/www/shiayanga"
           strip_components: 1
