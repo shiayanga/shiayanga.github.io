@@ -1,48 +1,59 @@
-name: Build and Deploy (Pages + Server)
+name: Deploy GitHub Pages and Server
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
 
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      # 1. 拉取代码
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      # ---------- Build ----------
-      - uses: ruby/setup-ruby@v1
+      # 2. 设置 Ruby
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.1'
+          ruby-version: '3.2'
+          bundler-cache: true
 
+      # 3. 安装依赖
       - name: Install gems
-        run: |
-          gem install bundler
-          bundle install
+        run: bundle install
 
+      # 4. 构建 Jekyll（生成 _site）
       - name: Build site
-        run: |
-          bundle exec jekyll build
+        run: bundle exec jekyll build
 
-      # ---------- GitHub Pages ----------
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+      # （可选，调试用，确认 _site 存在）
+      # - name: Debug workspace
+      #   run: ls -la
+
+      # 5. 上传构建产物给 GitHub Pages
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: _site
-          publish_branch: gh-pages
+          path: _site
 
-      # ---------- Personal Server ----------
+      # 6. 发布到 GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
+
+      # 7. 发布到个人服务器
       - name: Deploy to Server
         uses: appleboy/ssh-action@v1.0.0
         with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          port: ${{ secrets.SSH_PORT }}
-          key: ${{ secrets.SSH_KEY }}
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
             rsync -avz --delete _site/ /var/www/shiayanga/
