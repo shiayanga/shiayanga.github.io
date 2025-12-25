@@ -50,10 +50,12 @@ jobs:
 
       # 7. 发布到个人服务器
       - name: Deploy to Server
-        uses: appleboy/ssh-action@v1.0.0
+        uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          script: |
-            rsync -avz --delete _site/ /var/www/shiayanga/
+          key: ${{ secrets._SSH_KEY }}
+          source: "_site/*"
+          target: "/var/www/shiayanga"
+          strip_components: 1
+
